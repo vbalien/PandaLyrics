@@ -13,6 +13,14 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NuGetAPIKey }}
+          nuget-version: '5.x'
+
+      - name: NuGet resotre
+        run: nuget restore PandaLyrics.sln
+
       - name: Build
         run: msbuild PandaLyrics.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
 
