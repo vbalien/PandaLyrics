@@ -5,13 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PandaLyrics"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="150" Width="700"
         WindowStyle="None"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        MouseDown="Window_MouseDown"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Opacity="0.9">
     <Window.Background>
         <SolidColorBrush Color="White" Opacity="0"/>
     </Window.Background>
     <Grid>
-        
+        <StackPanel x:Name="stackPanel"/>
     </Grid>
 </Window>
