@@ -28,6 +28,7 @@ using Newtonsoft.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
+using System.Net.Sockets;
 
 namespace PandaLyrics
 {
@@ -169,8 +170,13 @@ namespace PandaLyrics
                 });
                 wssv.Start();
             }
+            catch (SocketException ex)
+            {
+                System.Windows.MessageBox.Show("8999포트가 이미 사용중입니다!\n이미 이 프로그램이 실행중인지 확인해주세요!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 System.Windows.MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
             }
@@ -254,13 +260,13 @@ namespace PandaLyrics
                 {
                     lyricList = fJL.GetLyricsSearch(string.Empty, Utils.Escape(e.Title));
                 }
-                Debug.WriteLine(lyricList);
 
                 if (lyricList.Count <= 0)
                 {
                     throw new Exception("검색된 가사가 없습니다.");
                 }
 
+                lyricList.Reverse();
                 foreach (var lyric in lyricList)
                 {
                     lyricSelectMenu.MenuItems.Add(lyric.Title + lyric.Artist + "[" + lyric.Album + "]").Click += (s, ev) =>
@@ -275,7 +281,6 @@ namespace PandaLyrics
                         LoadLyric(lyric.LyricID);
                     };
                 }
-
                 lyricSelectMenu.MenuItems[0].PerformClick();
             }
             catch
