@@ -37,7 +37,7 @@ namespace PandaLyrics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("32")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public double fontSize {
             get {
                 return ((double)(this["fontSize"]));
@@ -92,6 +92,30 @@ namespace PandaLyrics.Properties {
             }
             set {
                 this["shadowColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool bgVisible {
+            get {
+                return ((bool)(this["bgVisible"]));
+            }
+            set {
+                this["bgVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool appVisible {
+            get {
+                return ((bool)(this["appVisible"]));
+            }
+            set {
+                this["appVisible"] = value;
             }
         }
     }

@@ -85,6 +85,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils.cs" />
     <Compile Include="Websocket\LyricsReceiver.cs" />
     <Page Include="Component\Lyrics.xaml">
       <SubType>Designer</SubType>

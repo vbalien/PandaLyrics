@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="fontSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">32</Value>
+      <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="windowLeft" Type="System.Double" Scope="User">
       <Value Profile="(Default)">-1</Value>
@@ -19,6 +19,12 @@
     </Setting>
     <Setting Name="shadowColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="bgVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="appVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

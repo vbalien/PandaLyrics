@@ -25,7 +25,7 @@ namespace PandaLyrics.Component
         private double fontSize = Properties.Settings.Default.fontSize;
         private string fontColor = Properties.Settings.Default.fontColor;
         private string shadowColor = Properties.Settings.Default.shadowColor;
-        private string content = "준비중...";
+        private string content = "";
 
         public new double FontSize
         {
@@ -59,7 +59,7 @@ namespace PandaLyrics.Component
             get => content;
             set
             {
-                content = value;
+                content = value.Trim();
                 UpdateContent();
             }
         }

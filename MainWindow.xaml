@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PandaLyrics"
+        xmlns:local="clr-namespace:PandaLyrics" xmlns:component="clr-namespace:PandaLyrics.Component"
         mc:Ignorable="d"
-        Title="MainWindow" Height="150" Width="700"
+        Title="MainWindow" Width="600" MinHeight="100"
         WindowStyle="None"
         AllowsTransparency="True"
         Loaded="Window_Loaded"
@@ -14,12 +14,18 @@
         Topmost="True"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen"
+        SizeToContent="Height"
         Opacity="0.9">
     <Window.Background>
         <SolidColorBrush Color="White" Opacity="0"/>
     </Window.Background>
-    <Grid>
-        <StackPanel x:Name="stackPanel"/>
+    <Grid x:Name="grid">
+        <Border 
+            x:Name="lyricsBackground"
+            CornerRadius="10"
+            Background="#6000"
+            Padding="10,15">
+            <StackPanel x:Name="stackPanel" VerticalAlignment="Center"/>
+        </Border>
     </Grid>
 </Window>

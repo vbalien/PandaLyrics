@@ -36,19 +36,6 @@ namespace PandaLyrics
     /// </summary>
     public partial class MainWindow : Window
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern UInt32 GetWindowLong(IntPtr hWnd, int nIndex);
-        [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-        [DllImport("user32.dll")]
-        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_EX_LAYERED = 0x80000;
-        public const int WS_EX_TRANSPARENT = 0x20;
-        public const int LWA_ALPHA = 0x2;
-        public const int LWA_COLORKEY = 0x1;
-        private uint DEFAULT_FLAG;
-        IntPtr wHandle;
 
         static int PORT = 8999;
         private NotifyIcon ni = new NotifyIcon();
@@ -59,6 +46,8 @@ namespace PandaLyrics
         private System.Windows.Forms.MenuItem lyricSelectMenu;
         private LyricInfo lyricInfo;
         private uint prevTime = 0;
+        private uint DEFAULT_FLAG = 0;
+        private IntPtr wHandle;
 
         private class LyricEntity
         {
@@ -84,10 +73,16 @@ namespace PandaLyrics
             // Set context menu
             ni.ContextMenu = new System.Windows.Forms.ContextMenu();
             ni.ContextMenu.MenuItems.Add("숨기기/보이기").Click += ToggleWindow;
-            lyricSelectMenu = ni.ContextMenu.MenuItems.Add("가사 선택");
+            this.lyricSelectMenu = ni.ContextMenu.MenuItems.Add("가사 선택");
             ni.ContextMenu.MenuItems.Add("위치 이동").Click += ToggleMoveMode;
+            var bgMenu = ni.ContextMenu.MenuItems.Add("배경");
+            bgMenu.Click += ToggleBackground;
+            bgMenu.Checked = Properties.Settings.Default.bgVisible;
             ni.ContextMenu.MenuItems.Add("폰트 변경").Click += ChangeFont;
             ni.ContextMenu.MenuItems.Add("그림자 색 변경").Click += ChangeShadow;
+            var startMenu = ni.ContextMenu.MenuItems.Add("시작프로그램 등록");
+            startMenu.Checked = Utils.GetStartup();
+            startMenu.Click += ToggleStartUp;
             ni.ContextMenu.MenuItems.Add("종료").Click += (sender, e) => this.Close();
 
             lyricSelectMenu.MenuItems.Add("비어있음").Enabled = false;
@@ -95,9 +90,52 @@ namespace PandaLyrics
             ni.DoubleClick += (sender, e) => ni.ContextMenu.MenuItems[0].PerformClick();
             ni.ContextMenu.MenuItems[0].DefaultItem = true;
         }
+        private void ToggleBackground(object sender, EventArgs e)
+        {
+            var item = (System.Windows.Forms.MenuItem)sender;
+
+            if (item.Checked)
+            {
+                item.Checked = false;
+                Properties.Settings.Default.bgVisible = false;
+                this.SetBackgroundVisible(false);
+            }
+            else
+            {
+                item.Checked = true;
+                Properties.Settings.Default.bgVisible = true;
+                this.SetBackgroundVisible(true);
+            }
+            Properties.Settings.Default.Save();
+        }
+        private void ToggleStartUp(object sender, EventArgs e)
+        {
+            var item = (System.Windows.Forms.MenuItem)sender;
+            item.Checked = !item.Checked;
+            Utils.SetStartup(item.Checked);
+        }
+
+        private void SetBackgroundVisible(bool value)
+        {
+            this.grid.Children.Clear();
+            if (value)
+            {
+                lyricsBackground.Child = stackPanel;
+                this.grid.Children.Add(lyricsBackground);
+            }
+            else
+            {
+                lyricsBackground.Child = null;
+                this.grid.Children.Add(stackPanel);
+            }
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!Properties.Settings.Default.appVisible)
+            {
+                this.Hide();
+            }
             if (Properties.Settings.Default.windowLeft != -1 && Properties.Settings.Default.windowTop != -1)
             {
                 this.Left = Properties.Settings.Default.windowLeft;
@@ -105,27 +143,15 @@ namespace PandaLyrics
             }
             SetNotification();
             stackPanel.Children.Add(lyrics);
-
+            SetBackgroundVisible(Properties.Settings.Default.bgVisible);
             this.LocationChanged += this.Window_LocationChanged;
+            this.IsVisibleChanged += this.Window_IsVisibleChanged;
 
             SetupServer();
 
             wHandle = new WindowInteropHelper(this).Handle;
-            DEFAULT_FLAG = GetWindowLong(wHandle, GWL_EXSTYLE);
-            setClickThruAble(true);
-        }
-
-        private void setClickThruAble(bool value)
-        {
-            if (value)
-            {
-                SetWindowLong(wHandle, GWL_EXSTYLE,
-                    (IntPtr)(DEFAULT_FLAG | WS_EX_LAYERED | WS_EX_TRANSPARENT));
-            }
-            else
-            {
-                SetWindowLong(wHandle, GWL_EXSTYLE, (IntPtr)DEFAULT_FLAG);
-            }
+            DEFAULT_FLAG = Utils.GetWindowFlag(wHandle);
+            Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, true);
         }
 
         private void SetupServer()
@@ -138,6 +164,7 @@ namespace PandaLyrics
                     var lyricsReceiver = new LyricsReceiver();
                     lyricsReceiver.TickEvent += this.TickEvent;
                     lyricsReceiver.SongChangedEvent += this.SongChangedEvent;
+                    lyricsReceiver.CloseEvent += this.CloseConnectionEvent;
                     return lyricsReceiver;
                 });
                 wssv.Start();
@@ -148,19 +175,13 @@ namespace PandaLyrics
                 this.Close();
             }
         }
-
-        private string Escape(string value)
-        {
-            return value.Replace("&", "&amp;");
-        }
-
         private void LoadLyric(int lyricID)
         {
             Regex rx = new Regex(@"(?:\[(?<min>\d\d):(?<sec>\d\d\.\d\d)\])(?<content>.*)",
               RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             lyricEntities.Clear();
-            lyrics.Content = "\n가사를 불러오는 중...\n";
+            lyrics.Content = "가사를 불러오는 중...";
             uint prevTime = 0;
 
             lyricInfo = fJL.GetLyricsFromID(lyricID);
@@ -187,6 +208,7 @@ namespace PandaLyrics
                 prevTime = msec;
             }
             lyricEntities.Reverse();
+            lyrics.Content = "";
         }
 
         private void TickEvent(object sender, LyricsReceiver.TickEventArgs e)
@@ -217,19 +239,20 @@ namespace PandaLyrics
         {
             lyricEntities.Clear();
             lyricSelectMenu.MenuItems.Clear();
+            lyrics.Content = "";
             List<LyricBasicInfo> lyricList;
             prevTime = 0;
 
             try
             {
-                lyrics.Content = "\n가사를 검색중...\n";
+                lyrics.Content = "가사를 검색중...";
                 try
                 {
-                    lyricList = fJL.GetLyricsSearch(Escape(e.Artist), Escape(e.Title));
+                    lyricList = fJL.GetLyricsSearch(Utils.Escape(e.Artist), Utils.Escape(e.Title));
                 }
                 catch
                 {
-                    lyricList = fJL.GetLyricsSearch(string.Empty, Escape(e.Title));
+                    lyricList = fJL.GetLyricsSearch(string.Empty, Utils.Escape(e.Title));
                 }
                 Debug.WriteLine(lyricList);
 
@@ -259,10 +282,14 @@ namespace PandaLyrics
             {
                 lyricSelectMenu.MenuItems.Clear();
                 lyricSelectMenu.MenuItems.Add("비어있음").Enabled = false;
-                lyrics.Content = "\n가사를 찾지 못했습니다.\n";
+                lyrics.Content = "가사를 찾지 못했습니다.";
                 return;
             }
-
+        }
+        private void CloseConnectionEvent(object sender, CloseEventArgs e)
+        {
+            this.lyricEntities.Clear();
+            this.lyrics.Content = "";
         }
 
         private void ToggleWindow(object sender, EventArgs e)
@@ -282,20 +309,20 @@ namespace PandaLyrics
             if (this.moveMode)
             {
                 moveMode = false;
-                Properties.Settings.Default.Save();
+                item.Checked = false;
                 this.Cursor = null;
                 this.Background = System.Windows.Media.Brushes.Transparent;
-                setClickThruAble(true);
-                item.Text = "위치 이동";
+                Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, true);
             }
             else
             {
                 moveMode = true;
+                item.Checked = true;
                 this.Cursor = System.Windows.Input.Cursors.SizeAll;
                 this.Background = System.Windows.Media.Brushes.Black;
-                setClickThruAble(false);
-                item.Text = "위치 이동 끝내기";
+                Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, false);
             }
+            Properties.Settings.Default.Save();
         }
         private void ChangeFont(object sender, EventArgs e)
         {
@@ -361,6 +388,13 @@ namespace PandaLyrics
         {
             Properties.Settings.Default.windowLeft = this.Left;
             Properties.Settings.Default.windowTop = this.Top;
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine(this.IsVisible);
+            Properties.Settings.Default.appVisible = this.IsVisible;
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace PandaLyrics.Websocket
 {
     internal class LyricsReceiver : WebSocketBehavior
     {
+        public event EventHandler<CloseEventArgs> CloseEvent;
         public class SongChangedEventArgs : EventArgs
         {
             public string Artist { get; set; }
@@ -49,6 +50,11 @@ namespace PandaLyrics.Websocket
                     }
                     break;
             }
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+            CloseEvent(this, e);
         }
     }
 }
