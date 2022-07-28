@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Net.Sockets;
+using System.Windows.Threading;
 
 namespace PandaLyrics
 {
@@ -144,6 +145,7 @@ namespace PandaLyrics
             stackPanel.Children.Add(lyrics);
             this.LocationChanged += this.Window_LocationChanged;
 
+            this.lyricsBackground.Visibility = Visibility.Collapsed;
             SetupServer();
 
             wHandle = new WindowInteropHelper(this).Handle;
@@ -166,7 +168,8 @@ namespace PandaLyrics
                     var lyricsReceiver = new LyricsReceiver();
                     lyricsReceiver.TickEvent += this.TickEvent;
                     lyricsReceiver.SongChangedEvent += this.SongChangedEvent;
-                    lyricsReceiver.CloseEvent += this.CloseConnectionEvent;
+                    lyricsReceiver.CloseEvent += this.WS_CloseEvent;
+                    lyricsReceiver.OpenEvent += this.WS_OpenEvent;
                     return lyricsReceiver;
                 });
                 wssv.Start();
@@ -290,10 +293,25 @@ namespace PandaLyrics
                 return;
             }
         }
-        private void CloseConnectionEvent(object sender, CloseEventArgs e)
+        private void WS_CloseEvent(object sender, CloseEventArgs e)
         {
             this.lyricEntities.Clear();
             this.lyrics.Content = "";
+            this.Dispatcher.Invoke(DispatcherPriority.Normal,
+                new Action(delegate
+                {
+                    this.lyricsBackground.Visibility = Visibility.Collapsed;
+                }));
+        }
+        private void WS_OpenEvent(object sender, EventArgs e)
+        {
+            this.lyricEntities.Clear();
+            this.lyrics.Content = "";
+            this.Dispatcher.Invoke(DispatcherPriority.Normal,
+                new Action(delegate
+                {
+                    this.lyricsBackground.Visibility = Visibility.Visible;
+                }));
         }
 
         private void ToggleWindow(object sender, EventArgs e)
