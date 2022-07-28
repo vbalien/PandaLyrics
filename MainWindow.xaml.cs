@@ -170,7 +170,7 @@ namespace PandaLyrics
                 });
                 wssv.Start();
             }
-            catch (SocketException ex)
+            catch (SocketException)
             {
                 System.Windows.MessageBox.Show("8999포트가 이미 사용중입니다!\n이미 이 프로그램이 실행중인지 확인해주세요!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -266,7 +266,6 @@ namespace PandaLyrics
                     throw new Exception("검색된 가사가 없습니다.");
                 }
 
-                lyricList.Reverse();
                 foreach (var lyric in lyricList)
                 {
                     lyricSelectMenu.MenuItems.Add(lyric.Title + lyric.Artist + "[" + lyric.Album + "]").Click += (s, ev) =>
