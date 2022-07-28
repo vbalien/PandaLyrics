@@ -37,7 +37,7 @@ namespace PandaLyrics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
         public double fontSize {
             get {
                 return ((double)(this["fontSize"]));
@@ -73,7 +73,7 @@ namespace PandaLyrics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#ffffff")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#fff")]
         public string fontColor {
             get {
                 return ((string)(this["fontColor"]));
@@ -85,7 +85,7 @@ namespace PandaLyrics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#000000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000")]
         public string shadowColor {
             get {
                 return ((string)(this["shadowColor"]));
@@ -116,6 +116,54 @@ namespace PandaLyrics.Properties {
             }
             set {
                 this["appVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double bgWidth {
+            get {
+                return ((double)(this["bgWidth"]));
+            }
+            set {
+                this["bgWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#000")]
+        public string bgColor {
+            get {
+                return ((string)(this["bgColor"]));
+            }
+            set {
+                this["bgColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.4")]
+        public double bgAlpha {
+            get {
+                return ((double)(this["bgAlpha"]));
+            }
+            set {
+                this["bgAlpha"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.8")]
+        public double winOpacity {
+            get {
+                return ((double)(this["winOpacity"]));
+            }
+            set {
+                this["winOpacity"] = value;
             }
         }
     }

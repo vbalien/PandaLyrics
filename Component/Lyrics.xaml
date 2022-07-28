@@ -3,23 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PandaLyrics.Component"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded"
              >
     <Grid>
-        <TextBlock
+        <Border 
+            x:Name="lyricsBackground"
+            CornerRadius="10"
+            Background="{Binding BgColorBrush}"
+            Padding="10,15">
+            <TextBlock
             Name="lyricsText"
-            Foreground="White"
             TextAlignment="Center"
-            FontWeight="Bold">
-            <TextBlock.Effect>
-                <DropShadowEffect
+            FontWeight="Bold"
+            FontSize="{Binding FontSizeWpf}"
+            FontFamily="{Binding FontFamily}"
+            Foreground="{Binding FontColorBrush}"
+            TextWrapping="Wrap">
+                <TextBlock.Effect>
+                    <DropShadowEffect
                     Opacity="1"
                     BlurRadius="4"
                     ShadowDepth="0"
-                    Color="Black"/>
-            </TextBlock.Effect>
-        </TextBlock>
+                    Color="{Binding ShadowColor}"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Border>
     </Grid>
 </UserControl>

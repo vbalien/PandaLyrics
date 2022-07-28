@@ -1,11 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace PandaLyrics
 {
@@ -20,9 +15,6 @@ namespace PandaLyrics
         const int GWL_EXSTYLE = -20;
         const int WS_EX_LAYERED = 0x80000;
         const int WS_EX_TRANSPARENT = 0x20;
-        const int LWA_ALPHA = 0x2;
-        const int LWA_COLORKEY = 0x1;
-
         static public bool GetStartup()
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey

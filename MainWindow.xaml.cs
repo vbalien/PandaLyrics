@@ -1,35 +1,22 @@
-﻿using PandaLyrics.Component;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Reflection;
 using JLyrics;
 using System.Drawing;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using PandaLyrics.Websocket;
-using System.Diagnostics;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows.Interop;
-using System.Runtime.InteropServices;
 using System.Net.Sockets;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace PandaLyrics
 {
@@ -42,14 +29,15 @@ namespace PandaLyrics
         static int PORT = 8999;
         private NotifyIcon ni = new NotifyIcon();
         private bool moveMode = false;
-        private JLyrics.Lyrics fJL = new JLyrics.Lyrics();
+        private Lyrics fJL = new Lyrics();
         private Component.Lyrics lyrics = new Component.Lyrics();
         private WebSocketServer wssv;
-        private System.Windows.Forms.MenuItem lyricSelectMenu;
+        private MenuItem lyricSelectMenu;
         private LyricInfo lyricInfo;
         private uint prevTime = 0;
         private uint DEFAULT_FLAG = 0;
         private IntPtr wHandle;
+        internal AppSetting appSetting = new AppSetting();
 
         private class LyricEntity
         {
@@ -65,14 +53,10 @@ namespace PandaLyrics
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-
-            if (Properties.Settings.Default.windowLeft != -1 && Properties.Settings.Default.windowTop != -1)
-            {
-                this.Left = Properties.Settings.Default.windowLeft;
-                this.Top = Properties.Settings.Default.windowTop;
-            }
-            SetBackgroundVisible(Properties.Settings.Default.bgVisible);
             SetNotification();
+
+            Width = appSetting.BgWidth;
+            Opacity = appSetting.WinOpacity;
         }
         private void SetNotification()
         {
@@ -81,18 +65,13 @@ namespace PandaLyrics
             ni.Text = "Panda Lyrics";
 
             // Set context menu
-            ni.ContextMenu = new System.Windows.Forms.ContextMenu();
-            ni.ContextMenu.MenuItems.Add("숨기기/보이기").Click += ToggleWindow;
-            this.lyricSelectMenu = ni.ContextMenu.MenuItems.Add("가사 선택");
+            ni.ContextMenu = new ContextMenu();
+            var toggleMenu = ni.ContextMenu.MenuItems.Add("표시");
+            toggleMenu.Click += ToggleWindow;
+            toggleMenu.Checked = appSetting.AppVisible;
+            lyricSelectMenu = ni.ContextMenu.MenuItems.Add("가사 선택");
             ni.ContextMenu.MenuItems.Add("위치 이동").Click += ToggleMoveMode;
-            var bgMenu = ni.ContextMenu.MenuItems.Add("배경");
-            bgMenu.Click += ToggleBackground;
-            bgMenu.Checked = Properties.Settings.Default.bgVisible;
-            ni.ContextMenu.MenuItems.Add("폰트 변경").Click += ChangeFont;
-            ni.ContextMenu.MenuItems.Add("그림자 색 변경").Click += ChangeShadow;
-            var startMenu = ni.ContextMenu.MenuItems.Add("시작프로그램 등록");
-            startMenu.Checked = Utils.GetStartup();
-            startMenu.Click += ToggleStartUp;
+            ni.ContextMenu.MenuItems.Add("환경설정").Click += OpenSettings;
             ni.ContextMenu.MenuItems.Add("종료").Click += (sender, e) => this.Close();
 
             lyricSelectMenu.MenuItems.Add("비어있음").Enabled = false;
@@ -100,59 +79,56 @@ namespace PandaLyrics
             ni.DoubleClick += (sender, e) => ni.ContextMenu.MenuItems[0].PerformClick();
             ni.ContextMenu.MenuItems[0].DefaultItem = true;
         }
+        private void OpenSettings(object sender, EventArgs e)
+        {
+            SettingForm settingForm = new SettingForm(this);
+            settingForm.ShowDialog();
+        }
         private void ToggleBackground(object sender, EventArgs e)
         {
-            var item = (System.Windows.Forms.MenuItem)sender;
+            var item = (MenuItem)sender;
 
-            if (item.Checked)
+            if (appSetting.BgVisible)
             {
                 item.Checked = false;
-                Properties.Settings.Default.bgVisible = false;
-                this.SetBackgroundVisible(false);
+                appSetting.BgVisible = false;
             }
             else
             {
                 item.Checked = true;
-                Properties.Settings.Default.bgVisible = true;
-                this.SetBackgroundVisible(true);
+                appSetting.BgVisible = true;
             }
-            Properties.Settings.Default.Save();
-        }
-        private void ToggleStartUp(object sender, EventArgs e)
-        {
-            var item = (System.Windows.Forms.MenuItem)sender;
-            item.Checked = !item.Checked;
-            Utils.SetStartup(item.Checked);
-        }
-
-        private void SetBackgroundVisible(bool value)
-        {
-            this.grid.Children.Clear();
-            if (value)
-            {
-                lyricsBackground.Child = stackPanel;
-                this.grid.Children.Add(lyricsBackground);
-            }
-            else
-            {
-                lyricsBackground.Child = null;
-                this.grid.Children.Add(stackPanel);
-            }
+            appSetting.Save();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            stackPanel.Children.Add(lyrics);
-            this.LocationChanged += this.Window_LocationChanged;
+            if (appSetting.WindowLeft != -1 && appSetting.WindowTop != -1)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Left = appSetting.WindowLeft;
+                this.Top = appSetting.WindowTop;
+            }
+            else
+            {
+                this.Top = SystemParameters.WorkArea.Height - Height;
+                this.Left = SystemParameters.WorkArea.Width - Width - 30;
+                Debug.WriteLine(SystemParameters.WorkArea.Height);
+                Debug.WriteLine(Height);
+                Debug.WriteLine(Left);
+            }
 
-            this.lyricsBackground.Visibility = Visibility.Collapsed;
+            lyrics.Visibility = Visibility.Collapsed;
+            stackPanel.Children.Add(lyrics);
+            DataContext = appSetting;
+
             SetupServer();
 
             wHandle = new WindowInteropHelper(this).Handle;
             DEFAULT_FLAG = Utils.GetWindowFlag(wHandle);
             Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, true);
 
-            if (!Properties.Settings.Default.appVisible)
+            if (!appSetting.AppVisible)
             {
                 this.Visibility = Visibility.Collapsed;
             }
@@ -273,9 +249,9 @@ namespace PandaLyrics
                 {
                     lyricSelectMenu.MenuItems.Add(lyric.Title + lyric.Artist + "[" + lyric.Album + "]").Click += (s, ev) =>
                     {
-                        System.Windows.Forms.MenuItem item = (System.Windows.Forms.MenuItem)s;
+                        MenuItem item = (MenuItem)s;
 
-                        foreach (System.Windows.Forms.MenuItem menu in lyricSelectMenu.MenuItems)
+                        foreach (MenuItem menu in lyricSelectMenu.MenuItems)
                         {
                             menu.Checked = false;
                         }
@@ -300,7 +276,7 @@ namespace PandaLyrics
             this.Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(delegate
                 {
-                    this.lyricsBackground.Visibility = Visibility.Collapsed;
+                    this.lyrics.Visibility = Visibility.Collapsed;
                 }));
         }
         private void WS_OpenEvent(object sender, EventArgs e)
@@ -310,27 +286,30 @@ namespace PandaLyrics
             this.Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(delegate
                 {
-                    this.lyricsBackground.Visibility = Visibility.Visible;
+                    this.lyrics.Visibility = Visibility.Visible;
                 }));
         }
 
         private void ToggleWindow(object sender, EventArgs e)
         {
+            var item = (MenuItem)sender;
             if (this.IsVisible)
             {
                 this.Visibility = Visibility.Collapsed;
-                Properties.Settings.Default.appVisible = false;
+                item.Checked = false;
+                appSetting.AppVisible = false;
             }
             else
             {
                 this.Visibility = Visibility.Visible;
-                Properties.Settings.Default.appVisible = true;
+                item.Checked = true;
+                appSetting.AppVisible = true;
             }
-            Properties.Settings.Default.Save();
+            appSetting.Save();
         }
         private void ToggleMoveMode(object sender, EventArgs e)
         {
-            var item = sender as System.Windows.Forms.MenuItem;
+            var item = sender as MenuItem;
             if (this.moveMode)
             {
                 moveMode = false;
@@ -338,6 +317,10 @@ namespace PandaLyrics
                 this.Cursor = null;
                 this.Background = System.Windows.Media.Brushes.Transparent;
                 Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, true);
+
+                appSetting.WindowLeft = this.Left;
+                appSetting.WindowTop = this.Top;
+                appSetting.Save();
             }
             else
             {
@@ -347,55 +330,14 @@ namespace PandaLyrics
                 this.Background = System.Windows.Media.Brushes.Black;
                 Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, false);
             }
-            Properties.Settings.Default.Save();
-        }
-        private void ChangeFont(object sender, EventArgs e)
-        {
-            FontDialog fd = new FontDialog();
-
-            fd.ShowColor = true;
-
-            System.Windows.Media.Color mColor = lyrics.FontColor;
-            System.Drawing.Color dColor = System.Drawing.Color.FromArgb(mColor.A, mColor.R, mColor.G, mColor.B);
-
-            fd.Font = new System.Drawing.Font(
-               lyrics.FontFamily.Source,
-               (float)lyrics.FontSize,
-               System.Drawing.FontStyle.Bold
-            );
-            fd.Color = dColor;
-
-            if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                float fontSize = fd.Font.SizeInPoints;
-                string hexColor = ColorTranslator.ToHtml(fd.Color);
-                lyrics.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
-                lyrics.FontSize = fontSize;
-                lyrics.FontColor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
-
-                Properties.Settings.Default.fontFamily = fd.Font.Name;
-                Properties.Settings.Default.fontSize = fontSize;
-                Properties.Settings.Default.fontColor = hexColor;
-                Properties.Settings.Default.Save();
-            }
-        }
-        private void ChangeShadow(object sender, EventArgs e)
-        {
-            ColorDialog cd = new ColorDialog();
-
-            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string hexColor = ColorTranslator.ToHtml(cd.Color);
-                lyrics.ShadowColor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
-                Properties.Settings.Default.shadowColor = hexColor;
-                Properties.Settings.Default.Save();
-            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (moveMode && e.ChangedButton == MouseButton.Left)
+            {
                 DragMove();
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -406,13 +348,7 @@ namespace PandaLyrics
             {
                 wssv.Stop();
             }
-            Properties.Settings.Default.Save();
-        }
-
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.windowLeft = this.Left;
-            Properties.Settings.Default.windowTop = this.Top;
+            appSetting.Save();
         }
     }
 }

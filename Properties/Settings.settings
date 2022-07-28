@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="fontSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">20</Value>
+      <Value Profile="(Default)">14</Value>
     </Setting>
     <Setting Name="windowLeft" Type="System.Double" Scope="User">
       <Value Profile="(Default)">-1</Value>
@@ -15,16 +15,28 @@
       <Value Profile="(Default)">-1</Value>
     </Setting>
     <Setting Name="fontColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#ffffff</Value>
+      <Value Profile="(Default)">#fff</Value>
     </Setting>
     <Setting Name="shadowColor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#000000</Value>
+      <Value Profile="(Default)">#000</Value>
     </Setting>
     <Setting Name="bgVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="appVisible" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="bgWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="bgColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000</Value>
+    </Setting>
+    <Setting Name="bgAlpha" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.4</Value>
+    </Setting>
+    <Setting Name="winOpacity" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.8</Value>
     </Setting>
   </Settings>
 </SettingsFile>
