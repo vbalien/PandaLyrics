@@ -64,6 +64,14 @@ namespace PandaLyrics
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+
+            if (Properties.Settings.Default.windowLeft != -1 && Properties.Settings.Default.windowTop != -1)
+            {
+                this.Left = Properties.Settings.Default.windowLeft;
+                this.Top = Properties.Settings.Default.windowTop;
+            }
+            SetBackgroundVisible(Properties.Settings.Default.bgVisible);
+            SetNotification();
         }
         private void SetNotification()
         {
@@ -133,26 +141,19 @@ namespace PandaLyrics
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!Properties.Settings.Default.appVisible)
-            {
-                this.Hide();
-            }
-            if (Properties.Settings.Default.windowLeft != -1 && Properties.Settings.Default.windowTop != -1)
-            {
-                this.Left = Properties.Settings.Default.windowLeft;
-                this.Top = Properties.Settings.Default.windowTop;
-            }
-            SetNotification();
             stackPanel.Children.Add(lyrics);
-            SetBackgroundVisible(Properties.Settings.Default.bgVisible);
             this.LocationChanged += this.Window_LocationChanged;
-            this.IsVisibleChanged += this.Window_IsVisibleChanged;
 
             SetupServer();
 
             wHandle = new WindowInteropHelper(this).Handle;
             DEFAULT_FLAG = Utils.GetWindowFlag(wHandle);
             Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, true);
+
+            if (!Properties.Settings.Default.appVisible)
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void SetupServer()
@@ -176,7 +177,6 @@ namespace PandaLyrics
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
                 System.Windows.MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
             }
@@ -300,12 +300,15 @@ namespace PandaLyrics
         {
             if (this.IsVisible)
             {
-                this.Hide();
+                this.Visibility = Visibility.Collapsed;
+                Properties.Settings.Default.appVisible = false;
             }
             else
             {
-                this.Show();
+                this.Visibility = Visibility.Visible;
+                Properties.Settings.Default.appVisible = true;
             }
+            Properties.Settings.Default.Save();
         }
         private void ToggleMoveMode(object sender, EventArgs e)
         {
@@ -392,13 +395,6 @@ namespace PandaLyrics
         {
             Properties.Settings.Default.windowLeft = this.Left;
             Properties.Settings.Default.windowTop = this.Top;
-        }
-
-        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            Debug.WriteLine(this.IsVisible);
-            Properties.Settings.Default.appVisible = this.IsVisible;
-            Properties.Settings.Default.Save();
         }
     }
 }
