@@ -177,6 +177,7 @@ namespace PandaLyrics
             catch (SocketException)
             {
                 System.Windows.MessageBox.Show("8999포트가 이미 사용중입니다!\n이미 이 프로그램이 실행중인지 확인해주세요!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             }
             catch (Exception ex)
             {

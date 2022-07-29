@@ -42,7 +42,7 @@ namespace PandaLyrics
         public int? Get(string songID)
         {
             var command = connection.CreateCommand();
-            command.CommandText = @"select lyricID from HISTORY where songID = @songID";
+            command.CommandText = @"SELECT lyricID FROM HISTORY WHERE songID = @songID";
             command.Parameters.Add(new SQLiteParameter("@songID", songID));
             var result = command.ExecuteScalar();
             if (result == null)
