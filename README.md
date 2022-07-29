@@ -4,7 +4,7 @@ Spotify데스크탑앱에서 노래를 재생하면 alsong서버의 가사를 �
 
 
 
-## 필요조건
+## 필요
 
 * Spotify의 데스크탑앱
 * [Spicetify](https://spicetify.app/)
