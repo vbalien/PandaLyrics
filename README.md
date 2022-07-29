@@ -14,7 +14,7 @@ Spotify데스크탑앱에서 노래를 재생하면 alsong서버의 가사를 �
 
 ## 스크린샷
 
-![preview](.\Assets\preview.png)
+![preview](./Assets/preview.png)
 
 
 
