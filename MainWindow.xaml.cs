@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Reflection;
 using JLyrics;
-using System.Drawing;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using PandaLyrics.Websocket;
@@ -25,7 +24,6 @@ namespace PandaLyrics
     /// </summary>
     public partial class MainWindow : Window
     {
-
         static int PORT = 8999;
         private NotifyIcon ni = new NotifyIcon();
         private bool moveMode = false;
@@ -33,6 +31,7 @@ namespace PandaLyrics
         private Component.Lyrics lyrics = new Component.Lyrics();
         private WebSocketServer wssv;
         private MenuItem lyricSelectMenu;
+        private MenuItem toggleMoveMenu;
         private LyricInfo lyricInfo;
         private uint prevTime = 0;
         private uint DEFAULT_FLAG = 0;
@@ -58,6 +57,32 @@ namespace PandaLyrics
 
             Width = appSetting.BgWidth;
             Opacity = appSetting.WinOpacity;
+
+            if (!Utils.HasSpicetify())
+            {
+                System.Windows.MessageBox.Show("Spicetify가 설치되어있지 않습니다.", "PandaLyrics", MessageBoxButton.OK, MessageBoxImage.Stop);
+                this.Close();
+                return;
+            }
+
+            if (!Utils.HasExtension())
+            {
+                var answer = System.Windows.MessageBox.Show("pandaLyrics.js가 설치되어있지 않습니다.\n설치하고 적용하시겠습니까?", "PandaLyrics", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (answer == MessageBoxResult.Yes)
+                {
+                    if (!Utils.InstallExtension())
+                    {
+                        this.Close();
+                        return;
+                    }
+                    System.Windows.MessageBox.Show("pandaLyrics.js를 설치 및 적용하였습니다.");
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("프로그램을 종료합니다.");
+                    this.Close();
+                }
+            }
         }
         private void SetNotification()
         {
@@ -71,7 +96,8 @@ namespace PandaLyrics
             toggleMenu.Click += ToggleWindow;
             toggleMenu.Checked = appSetting.AppVisible;
             lyricSelectMenu = ni.ContextMenu.MenuItems.Add("가사 선택");
-            ni.ContextMenu.MenuItems.Add("위치 이동").Click += ToggleMoveMode;
+            toggleMoveMenu = ni.ContextMenu.MenuItems.Add("위치 이동");
+            toggleMoveMenu.Click += ToggleMoveMode;
             ni.ContextMenu.MenuItems.Add("환경설정").Click += OpenSettings;
             ni.ContextMenu.MenuItems.Add("종료").Click += (sender, e) => this.Close();
 
@@ -196,6 +222,10 @@ namespace PandaLyrics
 
         private void TickEvent(object sender, LyricsReceiver.TickEventArgs e)
         {
+            if (moveMode)
+            {
+                return;
+            }
             uint time = e.Time;
 
             if (time == prevTime)
@@ -339,6 +369,7 @@ namespace PandaLyrics
                 appSetting.WindowLeft = this.Left;
                 appSetting.WindowTop = this.Top;
                 appSetting.Save();
+                lyrics.Content = "";
             }
             else
             {
@@ -347,6 +378,7 @@ namespace PandaLyrics
                 this.Cursor = System.Windows.Input.Cursors.SizeAll;
                 this.Background = System.Windows.Media.Brushes.Black;
                 Utils.SetClickThruAble(wHandle, DEFAULT_FLAG, false);
+                lyrics.Content = "더블클릭시 위치이동을 완료합니다.";
             }
         }
 
@@ -367,6 +399,14 @@ namespace PandaLyrics
                 wssv.Stop();
             }
             appSetting.Save();
+        }
+
+        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (moveMode && e.ChangedButton == MouseButton.Left)
+            {
+                toggleMoveMenu.PerformClick();
+            }
         }
     }
 }
