@@ -45,6 +45,11 @@ namespace PandaLyrics.Websocket
             }
         }
 
+        internal void saveHistory(int songID, int lyricID)
+        {
+            Send("");
+        }
+
         protected override void OnClose(CloseEventArgs e)
         {
             CloseEvent(this, e);

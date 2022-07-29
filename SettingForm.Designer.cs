@@ -60,18 +60,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 104);
+            this.label1.Location = new System.Drawing.Point(39, 66);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 25);
+            this.label1.Size = new System.Drawing.Size(62, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "그림자색 :";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 18);
+            this.label2.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 25);
+            this.label2.Size = new System.Drawing.Size(59, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "글자 설정";
             // 
@@ -79,18 +80,18 @@
             // 
             this.selectShadowColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.selectShadowColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.selectShadowColor.Location = new System.Drawing.Point(138, 102);
+            this.selectShadowColor.Location = new System.Drawing.Point(107, 66);
             this.selectShadowColor.Name = "selectShadowColor";
-            this.selectShadowColor.Size = new System.Drawing.Size(36, 36);
+            this.selectShadowColor.Size = new System.Drawing.Size(24, 24);
             this.selectShadowColor.TabIndex = 3;
             this.selectShadowColor.TabStop = false;
             this.selectShadowColor.Click += new System.EventHandler(this.shadowColorSelcect_Click);
             // 
             // selectFont
             // 
-            this.selectFont.Location = new System.Drawing.Point(139, 146);
+            this.selectFont.Location = new System.Drawing.Point(107, 98);
             this.selectFont.Name = "selectFont";
-            this.selectFont.Size = new System.Drawing.Size(228, 95);
+            this.selectFont.Size = new System.Drawing.Size(183, 61);
             this.selectFont.TabIndex = 4;
             this.selectFont.UseVisualStyleBackColor = true;
             this.selectFont.Click += new System.EventHandler(this.selectFont_Click);
@@ -98,9 +99,9 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(75, 181);
+            this.label3.Location = new System.Drawing.Point(63, 121);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 25);
+            this.label3.Size = new System.Drawing.Size(38, 15);
             this.label3.TabIndex = 5;
             this.label3.Text = "폰트 :";
             // 
@@ -108,9 +109,9 @@
             // 
             this.selectFontColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.selectFontColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.selectFontColor.Location = new System.Drawing.Point(137, 59);
+            this.selectFontColor.Location = new System.Drawing.Point(107, 36);
             this.selectFontColor.Name = "selectFontColor";
-            this.selectFontColor.Size = new System.Drawing.Size(36, 36);
+            this.selectFontColor.Size = new System.Drawing.Size(24, 24);
             this.selectFontColor.TabIndex = 7;
             this.selectFontColor.TabStop = false;
             this.selectFontColor.Click += new System.EventHandler(this.selectFontColorClick);
@@ -118,17 +119,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(57, 59);
+            this.label4.Location = new System.Drawing.Point(50, 36);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 25);
+            this.label4.Size = new System.Drawing.Size(50, 15);
             this.label4.TabIndex = 6;
             this.label4.Text = "글자색 :";
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(247, 572);
+            this.btnClose.Location = new System.Drawing.Point(201, 409);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(120, 37);
+            this.btnClose.Size = new System.Drawing.Size(89, 25);
             this.btnClose.TabIndex = 8;
             this.btnClose.Text = "확인";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -137,10 +138,10 @@
             // selectStartUp
             // 
             this.selectStartUp.AutoSize = true;
-            this.selectStartUp.Location = new System.Drawing.Point(137, 527);
+            this.selectStartUp.Location = new System.Drawing.Point(107, 384);
             this.selectStartUp.Name = "selectStartUp";
             this.selectStartUp.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.selectStartUp.Size = new System.Drawing.Size(224, 29);
+            this.selectStartUp.Size = new System.Drawing.Size(150, 19);
             this.selectStartUp.TabIndex = 9;
             this.selectStartUp.Text = "시작프로그램으로 등록";
             this.selectStartUp.UseVisualStyleBackColor = true;
@@ -149,9 +150,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 252);
+            this.label5.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label5.Location = new System.Drawing.Point(12, 173);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 25);
+            this.label5.Size = new System.Drawing.Size(47, 15);
             this.label5.TabIndex = 10;
             this.label5.Text = "창 설정";
             // 
@@ -159,9 +161,9 @@
             // 
             this.selectBgColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.selectBgColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.selectBgColor.Location = new System.Drawing.Point(137, 440);
+            this.selectBgColor.Location = new System.Drawing.Point(107, 312);
             this.selectBgColor.Name = "selectBgColor";
-            this.selectBgColor.Size = new System.Drawing.Size(36, 36);
+            this.selectBgColor.Size = new System.Drawing.Size(24, 24);
             this.selectBgColor.TabIndex = 12;
             this.selectBgColor.TabStop = false;
             this.selectBgColor.Click += new System.EventHandler(this.selectBgColor_Click);
@@ -169,19 +171,19 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(57, 440);
+            this.label6.Location = new System.Drawing.Point(50, 312);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(76, 25);
+            this.label6.Size = new System.Drawing.Size(50, 15);
             this.label6.TabIndex = 11;
             this.label6.Text = "배경색 :";
             // 
             // selectBgVisible
             // 
             this.selectBgVisible.AutoSize = true;
-            this.selectBgVisible.Location = new System.Drawing.Point(137, 409);
+            this.selectBgVisible.Location = new System.Drawing.Point(107, 289);
             this.selectBgVisible.Name = "selectBgVisible";
             this.selectBgVisible.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.selectBgVisible.Size = new System.Drawing.Size(22, 21);
+            this.selectBgVisible.Size = new System.Drawing.Size(15, 14);
             this.selectBgVisible.TabIndex = 13;
             this.selectBgVisible.UseVisualStyleBackColor = true;
             this.selectBgVisible.CheckedChanged += new System.EventHandler(this.slelctBgVisible_CheckedChanged);
@@ -189,18 +191,18 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(75, 277);
+            this.label7.Location = new System.Drawing.Point(62, 199);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 25);
+            this.label7.Size = new System.Drawing.Size(38, 15);
             this.label7.TabIndex = 14;
             this.label7.Text = "너비 :";
             // 
             // selectWidth
             // 
-            this.selectWidth.Location = new System.Drawing.Point(138, 277);
+            this.selectWidth.Location = new System.Drawing.Point(107, 199);
             this.selectWidth.Maximum = 100;
             this.selectWidth.Name = "selectWidth";
-            this.selectWidth.Size = new System.Drawing.Size(227, 69);
+            this.selectWidth.Size = new System.Drawing.Size(183, 45);
             this.selectWidth.TabIndex = 15;
             this.selectWidth.TickStyle = System.Windows.Forms.TickStyle.None;
             this.selectWidth.Value = 50;
@@ -209,36 +211,37 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(39, 405);
+            this.label8.Location = new System.Drawing.Point(38, 288);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(94, 25);
+            this.label8.Size = new System.Drawing.Size(62, 15);
             this.label8.TabIndex = 16;
             this.label8.Text = "배경표시 :";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(13, 371);
+            this.label9.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label9.Location = new System.Drawing.Point(12, 259);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(90, 25);
+            this.label9.Size = new System.Drawing.Size(59, 15);
             this.label9.TabIndex = 17;
             this.label9.Text = "배경 설정";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(57, 479);
+            this.label10.Location = new System.Drawing.Point(50, 344);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(76, 25);
+            this.label10.Size = new System.Drawing.Size(50, 15);
             this.label10.TabIndex = 18;
             this.label10.Text = "투명도 :";
             // 
             // selectBgAlpha
             // 
-            this.selectBgAlpha.Location = new System.Drawing.Point(138, 479);
+            this.selectBgAlpha.Location = new System.Drawing.Point(107, 344);
             this.selectBgAlpha.Maximum = 100;
             this.selectBgAlpha.Name = "selectBgAlpha";
-            this.selectBgAlpha.Size = new System.Drawing.Size(227, 69);
+            this.selectBgAlpha.Size = new System.Drawing.Size(183, 45);
             this.selectBgAlpha.TabIndex = 19;
             this.selectBgAlpha.TickStyle = System.Windows.Forms.TickStyle.None;
             this.selectBgAlpha.Value = 1;
@@ -247,18 +250,18 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(57, 316);
+            this.label11.Location = new System.Drawing.Point(51, 229);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(76, 25);
+            this.label11.Size = new System.Drawing.Size(50, 15);
             this.label11.TabIndex = 20;
             this.label11.Text = "투명도 :";
             // 
             // selectWinOpacity
             // 
-            this.selectWinOpacity.Location = new System.Drawing.Point(137, 316);
+            this.selectWinOpacity.Location = new System.Drawing.Point(107, 229);
             this.selectWinOpacity.Maximum = 100;
             this.selectWinOpacity.Name = "selectWinOpacity";
-            this.selectWinOpacity.Size = new System.Drawing.Size(227, 69);
+            this.selectWinOpacity.Size = new System.Drawing.Size(183, 45);
             this.selectWinOpacity.TabIndex = 21;
             this.selectWinOpacity.TickStyle = System.Windows.Forms.TickStyle.None;
             this.selectWinOpacity.Value = 1;
@@ -266,9 +269,9 @@
             // 
             // SettingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(379, 626);
+            this.ClientSize = new System.Drawing.Size(297, 443);
             this.Controls.Add(this.selectBgVisible);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.selectWinOpacity);
