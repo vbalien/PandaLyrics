@@ -24,8 +24,15 @@ jobs:
       - name: Build
         run: msbuild PandaLyrics.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
 
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        shell: bash
+
       - name: Compress
-        run: Compress-Archive .\bin\Release\* -DestinationPath PandaLyrics.zip
+        run: |
+          Rename-Item -Path .\bin\Release -NewName .\bin\PandaLyrics-${{ steps.get_version.outputs.VERSION }}
+          Compress-Archive .\bin\PandaLyrics-${{ steps.get_version.outputs.VERSION }} -DestinationPath PandaLyrics.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1

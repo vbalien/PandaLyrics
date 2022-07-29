@@ -61,17 +61,17 @@ namespace PandaLyrics
         }
         static public bool HasExtension()
         {
-            string localPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string extensionPath = Path.Combine(localPath, @"spicetify\Extensions\pandaLyrics.js");
+            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string extensionPath = Path.Combine(appdataPath, @"spicetify\Extensions\pandaLyrics.js");
             return File.Exists(extensionPath);
         }
 
         static public bool HasSpicetify()
         {
-            string localPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string spicetifyPath = Path.Combine(localPath, @"spicetify");
+            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string spicetifyPath = Path.Combine(appdataPath, @"spicetify");
 
-            if (!Directory.Exists(spicetifyPath) || !Directory.Exists(Path.Combine(localPath, @"spicetify\Extensions")))
+            if (!Directory.Exists(spicetifyPath) || !Directory.Exists(Path.Combine(appdataPath, @"spicetify\Extensions")))
             {
                 return false;
             }
@@ -80,11 +80,10 @@ namespace PandaLyrics
 
         static public bool InstallExtension()
         {
-            string localPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string spicetifyPath = Path.Combine(localPath, @"spicetify");
-            string extensionPath = Path.Combine(localPath, @"spicetify\Extensions\pandaLyrics.js");
+            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string extensionPath = Path.Combine(appdataPath, @"spicetify\Extensions\pandaLyrics.js");
 
-            if (!Directory.Exists(Path.Combine(localPath, @"spicetify\Extensions")))
+            if (!Directory.Exists(Path.Combine(appdataPath, @"spicetify\Extensions")))
             {
                 MessageBox.Show("Spicetify가 제대로 설치되어있지 않습니다.", "PandaLyrics", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return false;
