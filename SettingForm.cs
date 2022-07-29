@@ -25,8 +25,8 @@ namespace PandaLyrics
         {
             selectShadowColor.BackColor = (Color)new ColorConverter().ConvertFromString(appSetting.ShadowColor.ToString());
             selectFontColor.BackColor = (Color)new ColorConverter().ConvertFromString(appSetting.FontColor.ToString());
-            selectFont.Text = appSetting.FontFamily.Source + "," + appSetting.FontSize.ToString();
-            selectFont.Font = new Font(appSetting.FontFamily.Source, (int)appSetting.FontSize);
+            selectFont.Text = appSetting.FontFamily.Source + "," + appSetting.FontSize.ToString() + "pt";
+            selectFont.Font = new Font(appSetting.FontFamily.Source, 11, FontStyle.Bold);
             selectBgVisible.Checked = appSetting.BgVisible;
             selectStartUp.Checked = Utils.GetStartup();
             selectWidth.Value = (int)(appSetting.BgWidth / 1000.0 * 100.0);
@@ -61,14 +61,12 @@ namespace PandaLyrics
 
             if (fd.ShowDialog() == oK)
             {
-                float fontSize = fd.Font.SizeInPoints;
-
-                appSetting.FontSize = fontSize;
+                appSetting.FontSize = fd.Font.Size;
                 appSetting.FontFamily = new System.Windows.Media.FontFamily(fd.Font.Name);
                 appSetting.Save();
 
-                selectFont.Text = appSetting.FontFamily.Source + "," + appSetting.FontSize.ToString();
-                selectFont.Font = new Font(appSetting.FontFamily.Source, (int)appSetting.FontSize);
+                selectFont.Text = appSetting.FontFamily.Source + "," + appSetting.FontSize.ToString() + "pt";
+                selectFont.Font = new Font(appSetting.FontFamily.Source, 11, FontStyle.Bold);
             }
         }
 

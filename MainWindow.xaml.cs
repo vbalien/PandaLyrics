@@ -38,6 +38,7 @@ namespace PandaLyrics
         private uint DEFAULT_FLAG = 0;
         private IntPtr wHandle;
         internal AppSetting appSetting = new AppSetting();
+        private HistoryManager history = new HistoryManager();
 
         private class LyricEntity
         {
@@ -113,9 +114,6 @@ namespace PandaLyrics
             {
                 this.Top = SystemParameters.WorkArea.Height - Height;
                 this.Left = SystemParameters.WorkArea.Width - Width - 30;
-                Debug.WriteLine(SystemParameters.WorkArea.Height);
-                Debug.WriteLine(Height);
-                Debug.WriteLine(Left);
             }
 
             SetLyricsVisible(false);
@@ -228,6 +226,7 @@ namespace PandaLyrics
             List<LyricBasicInfo> lyricList;
             prevTime = 0;
             SetLyricsVisible(true);
+            var lyricID = history.Get(e.SongID);
 
             try
             {
@@ -241,26 +240,35 @@ namespace PandaLyrics
                     lyricList = fJL.GetLyricsSearch(string.Empty, Utils.Escape(e.Title));
                 }
 
-                if (lyricList.Count <= 0)
+                if (lyricList == null || lyricList.Count <= 0)
                 {
                     throw new Exception("검색된 가사가 없습니다.");
                 }
 
                 foreach (var lyric in lyricList)
                 {
-                    lyricSelectMenu.MenuItems.Add(lyric.Title + lyric.Artist + "[" + lyric.Album + "]").Click += (s, ev) =>
+                    var menu = lyricSelectMenu.MenuItems.Add(lyric.Title + " - " + lyric.Artist + " [" + lyric.Album + "]");
+                    menu.Click += (s, ev) =>
                     {
                         MenuItem item = (MenuItem)s;
 
-                        foreach (MenuItem menu in lyricSelectMenu.MenuItems)
+                        foreach (MenuItem cur in lyricSelectMenu.MenuItems)
                         {
-                            menu.Checked = false;
+                            cur.Checked = false;
                         }
                         item.Checked = true;
+                        history.Set(e.SongID, lyric.LyricID);
                         LoadLyric(lyric.LyricID);
                     };
+                    if (lyricID != null && lyricID == lyric.LyricID)
+                    {
+                        menu.PerformClick();
+                    }
                 }
-                lyricSelectMenu.MenuItems[0].PerformClick();
+                if (lyricID == null)
+                {
+                    lyricSelectMenu.MenuItems[0].PerformClick();
+                }
             }
             catch
             {

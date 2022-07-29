@@ -13,6 +13,7 @@ namespace PandaLyrics.Websocket
         {
             public string Artist { get; set; }
             public string Title { get; set; }
+            public string SongID { get; set; }
         }
         public event EventHandler<SongChangedEventArgs> SongChangedEvent;
         public class TickEventArgs : EventArgs
@@ -44,12 +45,6 @@ namespace PandaLyrics.Websocket
                     break;
             }
         }
-
-        internal void saveHistory(int songID, int lyricID)
-        {
-            Send("");
-        }
-
         protected override void OnClose(CloseEventArgs e)
         {
             CloseEvent(this, e);

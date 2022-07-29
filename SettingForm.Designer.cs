@@ -89,9 +89,9 @@
             // 
             // selectFont
             // 
-            this.selectFont.Location = new System.Drawing.Point(107, 98);
+            this.selectFont.Location = new System.Drawing.Point(107, 115);
             this.selectFont.Name = "selectFont";
-            this.selectFont.Size = new System.Drawing.Size(183, 61);
+            this.selectFont.Size = new System.Drawing.Size(178, 27);
             this.selectFont.TabIndex = 4;
             this.selectFont.UseVisualStyleBackColor = true;
             this.selectFont.Click += new System.EventHandler(this.selectFont_Click);
