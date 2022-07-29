@@ -30,8 +30,9 @@ jobs:
         shell: bash
 
       - name: Compress
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
-          Rename-Item -Path .\bin\Release -NewName .\bin\PandaLyrics-${{ steps.get_version.outputs.VERSION }}
+          Rename-Item -Path .\bin\Release -NewName PandaLyrics-${{ steps.get_version.outputs.VERSION }}
           Compress-Archive .\bin\PandaLyrics-${{ steps.get_version.outputs.VERSION }} -DestinationPath PandaLyrics.zip
 
       - name: Release
