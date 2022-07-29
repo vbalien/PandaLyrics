@@ -36,7 +36,7 @@
       <Value Profile="(Default)">0.4</Value>
     </Setting>
     <Setting Name="winOpacity" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.8</Value>
+      <Value Profile="(Default)">0.95</Value>
     </Setting>
   </Settings>
 </SettingsFile>

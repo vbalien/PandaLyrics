@@ -118,7 +118,7 @@ namespace PandaLyrics
                 Debug.WriteLine(Left);
             }
 
-            lyrics.Visibility = Visibility.Collapsed;
+            SetLyricsVisible(false);
             stackPanel.Children.Add(lyrics);
             DataContext = appSetting;
 
@@ -227,6 +227,7 @@ namespace PandaLyrics
             lyrics.Content = "";
             List<LyricBasicInfo> lyricList;
             prevTime = 0;
+            SetLyricsVisible(true);
 
             try
             {
@@ -266,6 +267,7 @@ namespace PandaLyrics
                 lyricSelectMenu.MenuItems.Clear();
                 lyricSelectMenu.MenuItems.Add("비어있음").Enabled = false;
                 lyrics.Content = "가사를 찾지 못했습니다.";
+                SetLyricsVisible(false);
                 return;
             }
         }
@@ -273,21 +275,29 @@ namespace PandaLyrics
         {
             this.lyricEntities.Clear();
             this.lyrics.Content = "";
-            this.Dispatcher.Invoke(DispatcherPriority.Normal,
-                new Action(delegate
-                {
-                    this.lyrics.Visibility = Visibility.Collapsed;
-                }));
+            SetLyricsVisible(false);
         }
         private void WS_OpenEvent(object sender, EventArgs e)
         {
             this.lyricEntities.Clear();
             this.lyrics.Content = "";
+        }
+        private void SetLyricsVisible(bool value)
+        {
             this.Dispatcher.Invoke(DispatcherPriority.Normal,
                 new Action(delegate
                 {
-                    this.lyrics.Visibility = Visibility.Visible;
+                    if (value)
+                    {
+                        this.lyrics.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.lyrics.Visibility = Visibility.Collapsed;
+
+                    }
                 }));
+
         }
 
         private void ToggleWindow(object sender, EventArgs e)

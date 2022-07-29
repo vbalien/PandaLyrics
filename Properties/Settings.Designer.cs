@@ -157,7 +157,7 @@ namespace PandaLyrics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.8")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.95")]
         public double winOpacity {
             get {
                 return ((double)(this["winOpacity"]));
