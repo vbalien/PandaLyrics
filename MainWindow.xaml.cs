@@ -75,7 +75,6 @@ namespace PandaLyrics
                         this.Close();
                         return;
                     }
-                    System.Windows.MessageBox.Show("pandaLyrics.js를 설치 및 적용하였습니다.");
                 }
                 else
                 {

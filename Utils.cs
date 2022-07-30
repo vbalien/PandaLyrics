@@ -59,31 +59,70 @@ namespace PandaLyrics
         {
             return value.Replace("&", "&amp;");
         }
-        static public bool HasExtension()
+        public static bool CheckCommand(string fileName)
         {
-            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string extensionPath = Path.Combine(appdataPath, @"spicetify\Extensions\pandaLyrics.js");
-            return File.Exists(extensionPath);
+            if (File.Exists(fileName))
+                return true;
+
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(Path.PathSeparator))
+            {
+                var fullPath = Path.Combine(path, fileName);
+                if (File.Exists(fullPath))
+                    return true;
+            }
+            return false;
+        }
+        static public string GetSpicetifyConfigPath()
+        {
+            if (!CheckCommand("spicetify.exe"))
+            {
+                return null;
+            }
+            Process proc;
+            try
+            {
+                proc = new Process();
+                proc.StartInfo.FileName = @"spicetify.exe";
+                proc.StartInfo.Arguments = "-c";
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.Start();
+
+                string output = proc.StandardOutput.ReadToEnd().Trim();
+                proc.WaitForExit();
+
+                if (proc.ExitCode != 0)
+                {
+                    throw new Exception();
+                }
+                return Path.GetDirectoryName(output);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         static public bool HasSpicetify()
         {
-            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string spicetifyPath = Path.Combine(appdataPath, @"spicetify");
-
-            if (!Directory.Exists(spicetifyPath) || !Directory.Exists(Path.Combine(appdataPath, @"spicetify\Extensions")))
-            {
-                return false;
-            }
-            return true;
+            return GetSpicetifyConfigPath() != null;
         }
 
+
+        static public bool HasExtension()
+        {
+            string configPath = GetSpicetifyConfigPath();
+            string extensionPath = Path.Combine(configPath, @"Extensions\pandaLyrics.js");
+            return File.Exists(extensionPath);
+        }
         static public bool InstallExtension()
         {
-            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string extensionPath = Path.Combine(appdataPath, @"spicetify\Extensions\pandaLyrics.js");
+            string configPath = GetSpicetifyConfigPath();
+            string extensionPath = Path.Combine(configPath, @"Extensions\pandaLyrics.js");
 
-            if (!Directory.Exists(Path.Combine(appdataPath, @"spicetify\Extensions")))
+            if (!Directory.Exists(Path.Combine(configPath, @"Extensions")))
             {
                 MessageBox.Show("Spicetify가 제대로 설치되어있지 않습니다.", "PandaLyrics", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return false;
@@ -102,7 +141,6 @@ namespace PandaLyrics
             Process proc;
             try
             {
-
                 proc = new Process();
                 proc.StartInfo.FileName = @"spicetify.exe";
                 proc.StartInfo.Arguments = "config extensions pandaLyrics.js";
