@@ -1,3 +1,5 @@
+> ⛔ 이 프로젝트는 더이상 관리되지 않습니다. [PandaLyrics2](https://github.com/vbalien/PandaLyrics2)를 사용해주세요.
+
 # PandaLyrics
 
 Spotify데스크탑앱에서 노래를 재생하면 alsong서버의 가사를 화면에 그려줍니다.
